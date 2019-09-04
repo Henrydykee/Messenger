@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/pink"
+    android:gravity="center"
+    android:layout_height="match_parent"
+    tools:context=".Signup">
+
+
+    <ImageButton
+        android:id="@+id/selectPhoto"
+        android:layout_width="307dp"
+        android:layout_height="149dp"
+        app:srcCompat="@drawable/ic_file_upload_black_24dp" />
+
+    <EditText
+        android:background="@drawable/shape"
+        android:id="@+id/etUsername"
+        android:layout_width="303dp"
+        android:layout_height="47dp"
+        android:layout_below="@id/selectPhoto"
+        android:drawableRight="@drawable/ic_person_black_24dp"
+        android:hint="Username"
+        android:textColor="@color/white" />
+
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="303dp"
+        android:layout_height="47dp"
+        android:layout_below="@id/etUsername"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape"
+        android:drawableRight="@drawable/ic_email_black_24dp"
+        android:hint="Email"
+        android:textColor="@color/white" />
+
+    <EditText
+        android:background="@drawable/shape"
+        android:textColor="@color/white"
+        android:hint="Password"
+        android:layout_marginTop="10dp"
+        android:id="@+id/etPassword"
+        android:inputType="textPassword"
+        android:layout_width="303dp"
+        android:layout_height="47dp"
+        android:layout_below="@id/etEmail"
+        android:drawableRight="@drawable/ic_priority_high_black_24dp" />
+
+    <Button
+
+        android:id="@+id/buSignup"
+        android:layout_width="302dp"
+        android:layout_height="38dp"
+        android:layout_below="@id/etPassword"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button"
+        android:text="SignUp"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/buLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buSignup"
+        android:onClick="buLogin"
+        android:text="Have an Account?"
+        android:textSize="15sp" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="31dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/buSignup"
+        android:layout_marginTop="27dp" />
+
+</RelativeLayout>
