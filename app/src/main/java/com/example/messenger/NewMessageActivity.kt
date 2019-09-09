@@ -1,5 +1,6 @@
 package com.example.messenger
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +25,9 @@ class NewMessageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_new_message)
         supportActionBar?.title ="Contact"
 
+       val username = intent.getStringExtra(NewMessageActivity.USER_KEY)
+        supportActionBar?.title = username
+
         recyclerview_newmessage.adapter
         val adapter = GroupAdapter<ViewHolder>()
 
@@ -34,14 +38,15 @@ class NewMessageActivity : AppCompatActivity() {
         fetchUsers()
 
     }
+    companion object {
+        val USER_KEY = "USER_KEY"
+    }
         // function to fetch users from firebase
     private fun fetchUsers() {
        val ref = FirebaseDatabase.getInstance().getReference("/users")
         ref.addListenerForSingleValueEvent(object: ValueEventListener{
 
             override fun onDataChange(p0: DataSnapshot) {
-
-
                 val adapter = GroupAdapter<ViewHolder>()
                 p0.children.forEach{
                     Log.d("NewMessageActivity",it.toString())
@@ -49,7 +54,14 @@ class NewMessageActivity : AppCompatActivity() {
                     if(user!=null){
                         adapter.add(UserItem(user))
                     }
+                }// making the contacts click
+                adapter.setOnItemClickListener{item, view ->
 
+                    val userItem =item as UserItem
+                    val intent  = Intent(view.context,ChatLogActivity::class.java)
+                    intent.putExtra(USER_KEY, userItem.user.username)
+                    startActivity(intent)
+                    finish()
                 }
                 recyclerview_newmessage.adapter = adapter
             }
