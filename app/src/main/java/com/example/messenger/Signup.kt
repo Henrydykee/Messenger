@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -18,6 +19,7 @@ import com.example.messenger.Login
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_signup.*
 import java.util.*
 
@@ -134,7 +136,6 @@ class Signup : AppCompatActivity() {
         progress_bar.visibility = View.GONE
     }
 }
-class User(val uid:String, val username: String, val profileImageUrl: String  ){
-    constructor():this("","","")
-}
+
+
 

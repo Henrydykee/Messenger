@@ -10,7 +10,10 @@
     tools:context=".Signup">
 
 
-    <ImageButton
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:background="@color/white"
+        app:civ_border_width="4dp"
+        app:civ_border_color="@color/black"
         android:id="@+id/selectPhoto"
         android:layout_width="307dp"
         android:layout_height="149dp"

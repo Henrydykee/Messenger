@@ -14,7 +14,7 @@ import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
-import kotlinx.android.synthetic.main.user_row.view.*
+
 
 class ChatLogActivity : AppCompatActivity() {
 
@@ -29,19 +29,20 @@ class ChatLogActivity : AppCompatActivity() {
 
          toUser =intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
         // support actionbar title
-        supportActionBar?.title= "Contacts"
+        intent.getStringExtra(NewMessageActivity.USER_KEY)
+        supportActionBar?.title= toUser?.username
+
 
         buSend_Message.setOnClickListener {
             performSendMessage()
         }
-
-       // setupDummyData()
-
         ListenForMessages()
     }
 
     private fun ListenForMessages() {
-        val ref= FirebaseDatabase.getInstance().getReference("/message")
+        val fromid = FirebaseAuth.getInstance().uid
+        val toId = toUser?.uid
+        val ref= FirebaseDatabase.getInstance().getReference("/user-messages/$fromid/$toId")
 
         ref.addChildEventListener(object :ChildEventListener{
 
@@ -55,10 +56,9 @@ class ChatLogActivity : AppCompatActivity() {
                     }else {
                         adapter.add(ChatToItem(ChatMessage.text, toUser!!))
                     }
+                    recyclerview_chatlog.scrollToPosition(adapter.itemCount-1)
 
                 }
-
-
             }
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -86,11 +86,27 @@ class ChatLogActivity : AppCompatActivity() {
         //  automatically generates a noder for us in theh firbese called message
         val text = etChat.text.toString()
         val fromid=FirebaseAuth.getInstance().uid
-        val reference = FirebaseDatabase.getInstance().getReference("/message").push()
+        toUser =intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
+        val toId =user.uid
+      //  val reference = FirebaseDatabase.getInstance().getReference("/message").push()
+
+        val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromid/$toId").push()
+        val toRefrence = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromid").push()
 
         // we ARE going to create another class called chatmessage
         val chatMessage =ChatMessage(reference.key!!, text, fromid!!, System.currentTimeMillis())
         reference.setValue(chatMessage)
+            .addOnSuccessListener {
+                etChat.text.clear()
+                recyclerview_chatlog.scrollToPosition(adapter.itemCount-1)
+            }
+        toRefrence.setValue(chatMessage)
+        // to keep track of the latest message
+        val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromid/$toId")
+        latestMessageRef.setValue(chatMessage)
+        val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromid")
+        latestMessageToRef.setValue(chatMessage)
+
     }
 
 
@@ -107,8 +123,8 @@ class ChatLogActivity : AppCompatActivity() {
             return R.layout.chat_from_row
         }
     }
-    class ChatToItem(val text:String, val user: User): Item<ViewHolder>(){
 
+    class ChatToItem(val text:String, val user: User): Item<ViewHolder>(){
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.textView_to.text
 
